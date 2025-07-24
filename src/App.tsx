@@ -10,12 +10,17 @@ const mockGuesses: Color[][] = [
   [Color.Purple, Color.Red, Color.Yellow, Color.Green],
 ];
 
+const mockFeedback = [
+  { correct: 2, misplaced: 1 },
+  { correct: 1, misplaced: 2 },
+];
+
 function App() {
   return (
     <div className="App">
       <h1>Mastermind</h1>
       <GameBoard guesses={mockGuesses} />
-      <Feedback />
+      <Feedback feedback={mockFeedback} />
       <GuessInput />
       <ColorPicker />
     </div>
