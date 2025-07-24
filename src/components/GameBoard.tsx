@@ -1,7 +1,16 @@
 import React from "react";
+import { Color } from "../logic/mastermind";
 
-const GameBoard: React.FC = () => {
-  return <div>{/* Game board will display guesses and feedback here */}</div>;
-};
+interface GameBoardProps {
+  guesses: Color[][];
+}
+
+const GameBoard: React.FC<GameBoardProps> = ({ guesses }) => (
+  <div>
+    {guesses.map((guess, i) => (
+      <div key={i}>{guess.join(", ")}</div>
+    ))}
+  </div>
+);
 
 export default GameBoard;
