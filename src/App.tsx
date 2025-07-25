@@ -92,24 +92,41 @@ function App() {
 
   return (
     <div className="App">
+      <div className="game-controls">
+        {!isGameStarted && (
+          <button onClick={() => setHardMode((h) => !h)}>Switch Mode</button>
+        )}
+        <div
+          className={`mode-indicator ${hardMode ? "hard" : "normal"} mode-info`}
+        >
+          <p>
+            <strong>Current: {hardMode ? "Hard" : "Normal"} Mode</strong>
+            <br />
+            {hardMode
+              ? "Code can use repeated colors"
+              : "Code uses unique colors only"}
+          </p>
+        </div>
+      </div>
       <h1>Mastermind</h1>
-      {isGameOver && (
-        <button onClick={resetGame}>
-          {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
-        </button>
-      )}
-      {!isGameStarted && (
-        <button onClick={() => setHardMode((h) => !h)}>
-          {hardMode ? "Switch to Normal Mode" : "Switch to Hard Mode"}
-        </button>
-      )}
+
       <GameBoard guesses={guesses} feedbacks={feedbacks} />
-      <GuessInput
-        guess={currentGuess}
-        setGuess={setCurrentGuess}
-        hardMode={hardMode}
-        disabled={isGameOver}
-      />
+      <div className="input-section">
+        <GuessInput
+          guess={currentGuess}
+          setGuess={setCurrentGuess}
+          hardMode={hardMode}
+          disabled={isGameOver}
+        />
+
+        <div className="reset-button-container">
+          {isGameOver && (
+            <button onClick={resetGame} className="reset-button">
+              {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
+            </button>
+          )}
+        </div>
+      </div>
       <ColorPicker />
     </div>
   );
