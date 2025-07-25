@@ -154,13 +154,13 @@ function App() {
             </p>
           </div>
           {!isGameStarted ? (
-            <button onClick={() => resetGame()}>Reset Game</button>
+            <button onClick={() => resetGame()}>↻ Reset Game</button>
           ) : isGameOver ? (
             <button onClick={() => resetGame()}>
-              {isGameWon ? "You Won!\nPlay Again" : "Game Over!\nTry Again"}
+              {isGameWon ? "↻ You Won!\nPlay Again" : "↻ Game Over!\nTry Again"}
             </button>
           ) : (
-            <button onClick={() => resetGame()}>Reset Game</button>
+            <button onClick={() => resetGame()}>↻ Reset Game</button>
           )}
         </div>
         <div className="code-display">
