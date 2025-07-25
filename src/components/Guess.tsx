@@ -23,11 +23,14 @@ const Guess: React.FC<GuessProps> = ({
   selectedPegIndex = null,
 }) => (
   <div className="guess-row">
+    {/* Arrow for active row */}
+    {isActive && <div className="current-row-arrow" />}
+
     {/* Guess pegs */}
     {guess.map((color, j) => (
       <div
         key={j}
-        className="guess-peg"
+        className={`guess-peg ${isActive ? "active" : ""}`}
         onClick={
           isActive && onPegClick ? () => onPegClick(rowIndex, j) : undefined
         }
@@ -50,7 +53,7 @@ const Guess: React.FC<GuessProps> = ({
             selectedPegIndex === j ? "2px solid #0056b3" : "2px solid gray",
         }}
       >
-        {color ? color?.charAt(0) : ""}
+        {color ? color?.charAt(0).toUpperCase() : ""}
       </div>
     ))}
 

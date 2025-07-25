@@ -138,8 +138,23 @@ function App() {
       <div className="game-container">
         <h1>Mastermind</h1>
         <div className="game-controls">
+          <div
+            className={`mode-indicator ${
+              hardMode ? "hard" : "normal"
+            } mode-info ${!isGameStarted ? "active" : ""}`}
+            onClick={handleModeToggle}
+            style={{ cursor: "pointer" }}
+          >
+            <p>
+              <strong>Mode: {hardMode ? "Hard" : "Easy"}</strong>
+              <br />
+              {hardMode
+                ? "Code can use repeated colors"
+                : "Code uses unique colors only"}
+            </p>
+          </div>
           {!isGameStarted ? (
-            <button onClick={handleModeToggle}>Switch Mode</button>
+            <button onClick={() => resetGame()}>Reset Game</button>
           ) : isGameOver ? (
             <button onClick={() => resetGame()}>
               {isGameWon ? "You Won!\nPlay Again" : "Game Over!\nTry Again"}
@@ -147,19 +162,6 @@ function App() {
           ) : (
             <button onClick={() => resetGame()}>Reset Game</button>
           )}
-          <div
-            className={`mode-indicator ${
-              hardMode ? "hard" : "normal"
-            } mode-info ${!isGameStarted ? "active" : ""}`}
-          >
-            <p>
-              <strong>Current: {hardMode ? "Hard" : "Normal"} Mode</strong>
-              <br />
-              {hardMode
-                ? "Code can use repeated colors"
-                : "Code uses unique colors only"}
-            </p>
-          </div>
         </div>
         <div className="code-display">
           <div className="code-row">
@@ -172,9 +174,12 @@ function App() {
                   style={{
                     background: isGameOver ? code[i] : "#333",
                     color: isGameOver ? "white" : "white",
+                    border: "2px solid #e2e8f0" /* Add border */,
+                    transition: "all 0.2s ease" /* Add transition */,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" /* Add shadow */,
                   }}
                 >
-                  {isGameOver ? code[i]?.charAt(0) : "?"}
+                  {isGameOver ? code[i]?.charAt(0).toUpperCase() : "?"}
                 </div>
               ))}
           </div>
@@ -188,6 +193,7 @@ function App() {
             onPegClick={handlePegClick}
             onPegDoubleClick={handlePegDoubleClick}
             selectedPegIndex={selectedPegIndex}
+            isGameOver={isGameOver}
           />
         </div>
         <div className="input-section">
@@ -198,6 +204,9 @@ function App() {
             disabled={isGameOver}
             selectedPegIndex={selectedPegIndex}
             setSelectedPegIndex={setSelectedPegIndex}
+            isGameOver={isGameOver}
+            isGameWon={isGameWon}
+            onReset={resetGame}
           />
         </div>
       </div>

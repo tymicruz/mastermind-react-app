@@ -8,6 +8,9 @@ interface GuessInputProps {
   disabled?: boolean;
   selectedPegIndex: number | null;
   setSelectedPegIndex: (index: number | null) => void;
+  isGameOver?: boolean;
+  isGameWon?: boolean;
+  onReset?: () => void;
 }
 
 const colorOptions = Object.values(Color);
@@ -19,6 +22,9 @@ const GuessInput: React.FC<GuessInputProps> = ({
   disabled,
   selectedPegIndex,
   setSelectedPegIndex,
+  isGameOver = false,
+  isGameWon = false,
+  onReset,
 }) => {
   // Handle peg selection
   const handlePegClick = (i: number) => {
@@ -59,29 +65,64 @@ const GuessInput: React.FC<GuessInputProps> = ({
 
   return (
     <div>
-      <h3>Your Guess:</h3>
-      <div className="guess-row">
-        {guess.map((color, i) => (
-          <div
-            key={i}
-            className="guess-peg"
-            onClick={() => handlePegClick(i)}
-            onDoubleClick={() => handlePegClear(i)}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              handlePegClear(i);
-            }}
-            style={{
-              background: color || "#eee",
-              border:
-                selectedPegIndex === i ? "2px solid #0056b3" : "2px solid gray",
-              cursor: disabled ? "not-allowed" : "pointer",
-              opacity: disabled ? 0.5 : 1,
-            }}
-          >
-            {color?.charAt(0)}
-          </div>
-        ))}
+      <h3>
+        {isGameOver ? (isGameWon ? "You Won!" : "Game Over!") : "Your Guess:"}
+      </h3>
+      <div style={{ height: "40px", display: "flex", alignItems: "center" }}>
+        <div className="guess-row">
+          {isGameOver ? (
+            <button
+              onClick={onReset}
+              style={{
+                width: "100%",
+                height: "40px",
+                padding: "8px 12px",
+                fontSize: "10px",
+                fontWeight: "bold",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                color: "white",
+                border: "none",
+                borderRadius: "12px",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0",
+                whiteSpace: "pre-line",
+                lineHeight: "1.2",
+                textAlign: "center",
+                boxShadow: "0 4px 15px rgba(102, 126, 234, 0.3)",
+              }}
+            >
+              ↻ Play Again
+            </button>
+          ) : (
+            guess.map((color, i) => (
+              <div
+                key={i}
+                className="guess-peg active"
+                onClick={() => handlePegClick(i)}
+                onDoubleClick={() => handlePegClear(i)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  handlePegClear(i);
+                }}
+                style={{
+                  background: color || "#eee",
+                  border:
+                    selectedPegIndex === i
+                      ? "2px solid #0056b3"
+                      : "2px solid gray",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  opacity: disabled ? 0.5 : 1,
+                }}
+              >
+                {color?.charAt(0).toUpperCase()}
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Show color options always, but disable when game is over */}
@@ -95,11 +136,14 @@ const GuessInput: React.FC<GuessInputProps> = ({
               className="color-option"
               style={{
                 background: isUsed ? "#ccc" : color,
+                border: isUsed
+                  ? "2px solid #a0aec0"
+                  : "2px solid #cbd5e0" /* Darker border for used colors */,
                 cursor: isUsed || disabled ? "not-allowed" : "pointer",
                 opacity: isUsed || disabled ? 0.5 : 1,
               }}
             >
-              {color?.charAt(0)}
+              {color?.charAt(0).toUpperCase()}
             </div>
           );
         })}

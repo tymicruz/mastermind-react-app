@@ -12,6 +12,7 @@ interface GameBoardProps {
   onPegClick?: (rowIndex: number, pegIndex: number) => void;
   onPegDoubleClick?: (rowIndex: number, pegIndex: number) => void;
   selectedPegIndex?: number | null;
+  isGameOver: boolean;
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({
@@ -22,6 +23,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
   onPegClick,
   onPegDoubleClick,
   selectedPegIndex,
+  isGameOver,
 }) => (
   <div className="guess-board">
     {/* Show completed guesses */}
@@ -30,7 +32,7 @@ const GameBoard: React.FC<GameBoardProps> = ({
       .reverse()
       .map((guess, i) => {
         const originalIndex = guesses.length - 1 - i;
-        const isActiveRow = originalIndex === nextIndex;
+        const isActiveRow = originalIndex === nextIndex && !isGameOver;
 
         return (
           <Guess
