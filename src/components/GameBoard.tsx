@@ -1,7 +1,6 @@
 import React from "react";
 import { Color, EMPTY_GUESS } from "../logic/mastermind";
 import type { FeedbackItem } from "./Feedback";
-import Feedback from "./Feedback";
 import Guess from "./Guess";
 
 interface GameBoardProps {

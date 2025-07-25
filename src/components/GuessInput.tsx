@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Color } from "../logic/mastermind";
 
 interface GuessInputProps {
