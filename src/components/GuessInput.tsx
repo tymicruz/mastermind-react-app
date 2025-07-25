@@ -6,6 +6,8 @@ interface GuessInputProps {
   setGuess: (guess: (Color | null)[]) => void;
   hardMode: boolean;
   disabled?: boolean;
+  selectedPegIndex: number | null;
+  setSelectedPegIndex: (index: number | null) => void;
 }
 
 const colorOptions = Object.values(Color);
@@ -15,33 +17,44 @@ const GuessInput: React.FC<GuessInputProps> = ({
   setGuess,
   hardMode,
   disabled,
+  selectedPegIndex,
+  setSelectedPegIndex,
 }) => {
-  const [selectedPegIndex, setSelectedPegIndex] = useState<number | null>(null);
-
-  // Handle peg selection/deselection
+  // Handle peg selection
   const handlePegClick = (i: number) => {
-    setSelectedPegIndex(selectedPegIndex === i ? null : i);
-  };
+    if (disabled) return;
 
-  const handlePegDoubleClick = (index: number) => {
-    // Update the selected peg
-    setGuess(guess.map((c, i) => (i === index ? null : c)));
-    setSelectedPegIndex(null); // Optionally deselect after choosing
+    // If clicking the same peg, deselect it
+    if (selectedPegIndex === i) {
+      setSelectedPegIndex(null);
+    } else {
+      // Select the clicked peg
+      setSelectedPegIndex(i);
+    }
   };
 
   // Handle color selection
   const handleColorClick = (color: Color) => {
+    if (disabled) return;
+
     if (selectedPegIndex !== null) {
       // Update the selected peg
       setGuess(guess.map((c, i) => (i === selectedPegIndex ? color : c)));
-      setSelectedPegIndex(null); // Optionally deselect after choosing
+      setSelectedPegIndex(null); // Deselect after choosing
     } else {
-      // Fill the leftmost empty peg
+      // If no peg is selected, fill the leftmost empty peg
       const firstEmpty = guess.findIndex((c) => c === null);
       if (firstEmpty !== -1) {
         setGuess(guess.map((c, i) => (i === firstEmpty ? color : c)));
       }
     }
+  };
+
+  // Handle peg clearing (right-click or double-click)
+  const handlePegClear = (index: number) => {
+    if (disabled) return;
+    setGuess(guess.map((c, i) => (i === index ? null : c)));
+    setSelectedPegIndex(null);
   };
 
   return (
@@ -53,36 +66,46 @@ const GuessInput: React.FC<GuessInputProps> = ({
             key={i}
             className="guess-peg"
             onClick={() => handlePegClick(i)}
-            onDoubleClick={() => handlePegDoubleClick(i)}
+            onDoubleClick={() => handlePegClear(i)}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              handlePegClear(i);
+            }}
             style={{
               background: color || "#eee",
               border:
-                selectedPegIndex === i ? "2px solid blue" : "2px solid gray",
+                selectedPegIndex === i ? "2px solid #0056b3" : "2px solid gray",
+              cursor: disabled ? "not-allowed" : "pointer",
+              opacity: disabled ? 0.5 : 1,
             }}
           >
             {color?.charAt(0)}
           </div>
         ))}
       </div>
-      <div className="guess-row" style={{ marginTop: 12 }}>
-        {colorOptions.map((color) => {
-          const isUsed = !hardMode && guess.includes(color);
-          return (
-            <div
-              key={color}
-              onClick={() => !isUsed && !disabled && handleColorClick(color)}
-              className="color-option"
-              style={{
-                background: isUsed ? "#ccc" : color,
-                cursor: isUsed || disabled ? "not-allowed" : "pointer",
-                opacity: isUsed || disabled ? 0.5 : 1,
-              }}
-            >
-              {color?.charAt(0)}
-            </div>
-          );
-        })}
-      </div>
+
+      {/* Show color options when game is not disabled */}
+      {!disabled && (
+        <div className="guess-row" style={{ marginTop: 12 }}>
+          {colorOptions.map((color) => {
+            const isUsed = !hardMode && guess.includes(color);
+            return (
+              <div
+                key={color}
+                onClick={() => !isUsed && !disabled && handleColorClick(color)}
+                className="color-option"
+                style={{
+                  background: isUsed ? "#ccc" : color,
+                  cursor: isUsed || disabled ? "not-allowed" : "pointer",
+                  opacity: isUsed || disabled ? 0.5 : 1,
+                }}
+              >
+                {color?.charAt(0)}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

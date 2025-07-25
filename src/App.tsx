@@ -53,9 +53,11 @@ function App() {
   const [guesses, setGuesses] = useState<(Color[] | null)[]>(EMPTY_GUESSES);
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>(EMPTY_FEEDBACKS);
   const [code, setCode] = useState<Color[]>(() => generateRandomCode(hardMode));
+  const [nextIndex, setNextIndex] = useState<number>(0);
+  const [selectedPegIndex, setSelectedPegIndex] = useState<number | null>(null);
 
   const isGameWon = feedbacks.some((feedback) => feedback.correct === 4);
-  const isGameOver = isGameWon || guesses.filter((g) => g === null).length == 0;
+  const isGameOver = isGameWon || nextIndex === -1;
   const isGameStarted = guesses.filter((g) => g !== null).length > 0;
 
   const resetGame = () => {
@@ -63,7 +65,56 @@ function App() {
     setFeedbacks(EMPTY_FEEDBACKS);
     setCurrentGuess(EMPTY_GUESS);
     setCode(generateRandomCode(hardMode)); // Generate new code on reset
+    setNextIndex(0); // Reset nextIndex
+    setSelectedPegIndex(null); // Reset selected peg
   };
+
+  // Handle peg selection in the active row
+  const handlePegClick = (rowIndex: number, pegIndex: number) => {
+    if (rowIndex === nextIndex) {
+      setSelectedPegIndex(selectedPegIndex === pegIndex ? null : pegIndex);
+    }
+  };
+
+  // Handle peg clearing in the active row
+  const handlePegDoubleClick = (rowIndex: number, pegIndex: number) => {
+    if (rowIndex === nextIndex) {
+      setCurrentGuess((prev) =>
+        prev.map((color, i) => (i === pegIndex ? null : color))
+      );
+      setSelectedPegIndex(null);
+    }
+  };
+
+  // Handle color selection from GuessInput
+  const handleColorClick = (color: Color) => {
+    if (selectedPegIndex !== null) {
+      // Update the selected peg
+      setCurrentGuess((prev) =>
+        prev.map((c, i) => (i === selectedPegIndex ? color : c))
+      );
+      setSelectedPegIndex(null);
+    } else {
+      // Fill the leftmost empty peg
+      const firstEmpty = currentGuess.findIndex((c) => c === null);
+      if (firstEmpty !== -1) {
+        setCurrentGuess((prev) =>
+          prev.map((c, i) => (i === firstEmpty ? color : c))
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Update the current row with the current guess
+    if (nextIndex !== -1) {
+      setGuesses((prev) => {
+        const newGuesses = [...prev];
+        newGuesses[nextIndex] = currentGuess as Color[];
+        return newGuesses;
+      });
+    }
+  }, [currentGuess, nextIndex]);
 
   useEffect(() => {
     // Check if all pegs are filled
@@ -71,16 +122,8 @@ function App() {
       // Submit the guess
       const feedback = calculateFeedback(currentGuess as Color[], code);
 
-      const nextIndex = guesses.findIndex((guess) => guess === null);
-
       if (nextIndex !== -1) {
-        // Update the specific row
-        setGuesses((prev) => {
-          const newGuesses = [...prev];
-          newGuesses[nextIndex] = currentGuess as Color[];
-          return newGuesses;
-        });
-
+        // Update the specific row with feedback
         setFeedbacks((prev) => {
           const newFeedbacks = [...prev];
           newFeedbacks[nextIndex] = feedback;
@@ -89,8 +132,13 @@ function App() {
       }
 
       setCurrentGuess(EMPTY_GUESS);
+      // Move to next empty row
+      const newNextIndex = guesses.findIndex(
+        (guess, index) => index > nextIndex && guess === null
+      );
+      setNextIndex(newNextIndex);
     }
-  }, [currentGuess, code]);
+  }, [currentGuess, code, nextIndex]);
 
   return (
     <div className="App">
@@ -131,7 +179,15 @@ function App() {
           </div>
         </div>
         <div className="game-board">
-          <GameBoard guesses={guesses} feedbacks={feedbacks} />
+          <GameBoard
+            guesses={guesses}
+            feedbacks={feedbacks}
+            currentGuess={currentGuess}
+            nextIndex={nextIndex}
+            onPegClick={handlePegClick}
+            onPegDoubleClick={handlePegDoubleClick}
+            selectedPegIndex={selectedPegIndex}
+          />
         </div>
         <div className="input-section">
           <GuessInput
@@ -139,6 +195,8 @@ function App() {
             setGuess={setCurrentGuess}
             hardMode={hardMode}
             disabled={isGameOver}
+            selectedPegIndex={selectedPegIndex}
+            setSelectedPegIndex={setSelectedPegIndex}
           />
 
           <div className="reset-button-container">
