@@ -58,14 +58,6 @@ function App() {
     if (currentGuess.every((c) => c !== null)) {
       // Submit the guess
       const feedback = calculateFeedback(currentGuess as Color[], mockCode);
-      console.log(
-        "Guess:",
-        currentGuess,
-        "Code:",
-        mockCode,
-        "Feedback:",
-        feedback
-      );
       setGuesses((prev) => [...prev, currentGuess as Color[]]);
       setFeedbacks((prev) => [...prev, feedback]);
       setCurrentGuess(emptyGuess);
