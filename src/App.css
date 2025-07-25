@@ -58,19 +58,20 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: min(6px, 1vh); /* Smaller gap to fit more rows */
+  gap: min(4px, 0.5vh); /* Even smaller gap to fit more rows */
   align-items: center; /* Center all rows */
   overflow: hidden; /* Prevent scrolling */
+  max-height: calc(100vh - 300px); /* Limit height to prevent cutoff */
 }
 
 .guess-row {
   display: flex;
-  gap: min(6px, 0.8vh); /* Smaller gap between pegs */
+  gap: min(12px, 1.2vh); /* Bigger gap between pegs for more horizontal spacing */
   justify-content: center;
   align-items: center;
   width: 100%; /* Full width */
-  max-width: 350px; /* Slightly smaller max width */
-  margin-bottom: min(8px, 1.5vh); /* Reduced margin between rows */
+  max-width: 450px; /* Bigger max width to use more horizontal space */
+  margin-bottom: min(4px, 0.5vh); /* Keep tight vertical spacing */
   position: relative; /* For absolute positioning of feedback */
 }
 
@@ -79,14 +80,19 @@
 }
 
 .game-controls {
-  position: fixed;
-  top: 20px;
-  right: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 100;
   align-items: center;  /* Centers the items relative to each other */
+  max-width: 200px; /* Prevent it from getting too wide */
+  margin: 10px auto; /* Center it */
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .App {
+    padding: 0 10px 10px 10px; /* Reduce side padding on mobile */
+  }
 }
 
 .game-container {
@@ -111,10 +117,10 @@
   margin: 0; /* Remove all margins */
 }
 
-/* Responsive peg sizing - make them smaller to fit */
+/* Responsive peg sizing - make them slightly bigger */
 .guess-peg {
-  width: min(35px, 3.5vh); /* Slightly bigger */
-  height: min(35px, 3.5vh);
+  width: min(32px, 3.2vh); /* Slightly bigger circles */
+  height: min(32px, 3.2vh);
   border: 2px solid gray;
   border-radius: 50%;
   display: flex;
@@ -122,20 +128,20 @@
   justify-content: center;
   cursor: pointer;
   background: #eee;
-  font-size: min(10px, 1vh); /* Smaller font */
+  font-size: min(9px, 0.9vh); /* Slightly bigger font */
   flex-shrink: 0; /* Prevent shrinking */
 }
 
 .code-peg {
-  width: min(35px, 3.5vh); /* Match guess pegs exactly */
-  height: min(35px, 3.5vh);
+  width: min(32px, 3.2vh); /* Match guess pegs exactly */
+  height: min(32px, 3.2vh);
   border: 2px solid gray;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: min(14px, 1.4vh); /* Bigger font for question marks */
+  font-size: min(13px, 1.3vh); /* Slightly bigger font for question marks */
   color: white;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
   flex-shrink: 0;
@@ -143,8 +149,8 @@
 
 /* Color option pegs - same size as other pegs */
 .color-option {
-  width: min(41px, 4.1vh); /* Bigger to fake-match other pegs */
-  height: min(41px, 4.1vh);
+  width: min(37px, 3.7vh); /* Keep color options slightly bigger for usability */
+  height: min(37px, 3.7vh);
   border: 2px solid gray;
   border-radius: 50%;
   cursor: pointer;
@@ -194,7 +200,7 @@
 
 .input-section {
   flex-shrink: 0; /* Don't shrink the input section */
-  margin-top: auto; /* Push to bottom */
+  margin-top: 5px; /* Reduced from auto to minimize gap */
 }
 
 .reset-button-container {
@@ -219,19 +225,25 @@
 }
 
 .mode-indicator {
-  width: 180px;  /* Wider */
-  height: 40px;
+  width: 180px;  /* Back to original width */
+  height: 40px; /* Back to original height */
   padding: 8px 12px;
   border-radius: 6px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 5px; /* Back to original font size */
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 0; /* Remove the margin */
   display: flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
   overflow: hidden;
+  opacity: 0.7; /* Make it slightly opaque by default */
+  transition: opacity 0.2s ease; /* Smooth transition */
+}
+
+.mode-indicator.active {
+  opacity: 1; /* Full opacity when toggle is present */
 }
 
 .mode-indicator.normal {
@@ -251,12 +263,12 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 8px 12px;
-  margin-bottom: 10px;
+  margin-bottom: 0; /* Remove margin */
   text-align: center;
 }
 
 .mode-info p {
   margin: 0;
-  font-size: 12px;
+  font-size: 10px; /* Changed from 12px to match your desired size */
   color: #666;
 }

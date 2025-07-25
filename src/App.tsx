@@ -46,7 +46,7 @@ const calculateFeedback = (guess: Color[], code: Color[]) => {
 };
 
 function App() {
-  const [hardMode, setHardMode] = useState(false);
+  const [hardMode, setHardMode] = useState(false); // HARD MODE: Set to true to enable hard mode
   const [currentGuess, setCurrentGuess] =
     useState<(Color | null)[]>(EMPTY_GUESS);
 
@@ -58,7 +58,9 @@ function App() {
 
   const isGameWon = feedbacks.some((feedback) => feedback.correct === 4);
   const isGameOver = isGameWon || nextIndex === -1;
-  const isGameStarted = guesses.filter((g) => g !== null).length > 0;
+  const isGameStarted =
+    guesses.some((guess) => guess && guess.some((color) => color !== null)) ||
+    currentGuess.some((peg) => peg !== null); // Game started when any guess has actual colors or current guess has pegs
 
   const resetGame = () => {
     setGuesses(EMPTY_GUESSES);
@@ -68,6 +70,16 @@ function App() {
     setNextIndex(0); // Reset nextIndex
     setSelectedPegIndex(null); // Reset selected peg
   };
+
+  // Reset game when mode changes
+  const handleModeToggle = () => {
+    setHardMode((h) => !h); // Just toggle, let useEffect handle reset
+  };
+
+  // Reset game whenever hardMode changes
+  useEffect(() => {
+    resetGame();
+  }, [hardMode]);
 
   // Handle peg selection in the active row
   const handlePegClick = (rowIndex: number, pegIndex: number) => {
@@ -83,25 +95,6 @@ function App() {
         prev.map((color, i) => (i === pegIndex ? null : color))
       );
       setSelectedPegIndex(null);
-    }
-  };
-
-  // Handle color selection from GuessInput
-  const handleColorClick = (color: Color) => {
-    if (selectedPegIndex !== null) {
-      // Update the selected peg
-      setCurrentGuess((prev) =>
-        prev.map((c, i) => (i === selectedPegIndex ? color : c))
-      );
-      setSelectedPegIndex(null);
-    } else {
-      // Fill the leftmost empty peg
-      const firstEmpty = currentGuess.findIndex((c) => c === null);
-      if (firstEmpty !== -1) {
-        setCurrentGuess((prev) =>
-          prev.map((c, i) => (i === firstEmpty ? color : c))
-        );
-      }
     }
   };
 
@@ -142,24 +135,28 @@ function App() {
 
   return (
     <div className="App">
-      <div className="game-controls">
-        {!isGameStarted && (
-          <button onClick={() => setHardMode((h) => !h)}>Switch Mode</button>
-        )}
-        <div
-          className={`mode-indicator ${hardMode ? "hard" : "normal"} mode-info`}
-        >
-          <p>
-            <strong>Current: {hardMode ? "Hard" : "Normal"} Mode</strong>
-            <br />
-            {hardMode
-              ? "Code can use repeated colors"
-              : "Code uses unique colors only"}
-          </p>
-        </div>
-      </div>
       <div className="game-container">
         <h1>Mastermind</h1>
+        <div className="game-controls">
+          {!isGameStarted ? (
+            <button onClick={handleModeToggle}>Switch Mode</button>
+          ) : (
+            <button onClick={() => resetGame()}>Reset Game</button>
+          )}
+          <div
+            className={`mode-indicator ${
+              hardMode ? "hard" : "normal"
+            } mode-info ${!isGameStarted ? "active" : ""}`}
+          >
+            <p>
+              <strong>Current: {hardMode ? "Hard" : "Normal"} Mode</strong>
+              <br />
+              {hardMode
+                ? "Code can use repeated colors"
+                : "Code uses unique colors only"}
+            </p>
+          </div>
+        </div>
         <div className="code-display">
           <div className="code-row">
             {Array(4)
@@ -201,7 +198,7 @@ function App() {
 
           <div className="reset-button-container">
             {isGameOver && (
-              <button onClick={resetGame} className="reset-button">
+              <button onClick={() => resetGame()} className="reset-button">
                 {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
               </button>
             )}
