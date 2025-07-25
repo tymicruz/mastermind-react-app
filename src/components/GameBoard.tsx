@@ -6,9 +6,31 @@ interface GameBoardProps {
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({ guesses }) => (
-  <div>
+  <div className="guess-board">
     {guesses.map((guess, i) => (
-      <div key={i}>{guess.join(", ")}</div>
+      <div
+        key={i}
+        className="guess-row"
+        style={{ display: "flex", gap: "8px" }}
+      >
+        {guess.map((color, j) => (
+          <div
+            key={j}
+            style={{
+              width: 40,
+              height: 40,
+              border: "2px solid gray",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              background: color || "#eee",
+            }}
+          >
+            {color || ""}
+          </div>
+        ))}
+      </div>
     ))}
   </div>
 );

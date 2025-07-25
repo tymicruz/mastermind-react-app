@@ -58,7 +58,7 @@ const GuessInput: React.FC<GuessInputProps> = ({
               width: 40,
               height: 40,
               border:
-                selectedPegIndex === i ? "2px solid blue" : "1px solid gray",
+                selectedPegIndex === i ? "2px solid blue" : "2px solid gray",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
