@@ -22,7 +22,7 @@ const Guess: React.FC<GuessProps> = ({ guess, feedback }) => (
     ))}
 
     {/* Single feedback */}
-    <Feedback feedback={[feedback]} />
+    <Feedback feedback={feedback} />
   </div>
 );
 

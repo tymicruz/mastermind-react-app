@@ -47,7 +47,7 @@ const GuessInput: React.FC<GuessInputProps> = ({
   return (
     <div>
       <h3>Your Guess:</h3>
-      <div style={{ display: "flex", gap: "8px" }}>
+      <div className="guess-row">
         {guess.map((color, i) => (
           <div
             key={i}
@@ -68,19 +68,18 @@ const GuessInput: React.FC<GuessInputProps> = ({
         {colorOptions.map((color) => {
           const isUsed = !hardMode && guess.includes(color);
           return (
-            <button
+            <div
               key={color}
               onClick={() => !isUsed && !disabled && handleColorClick(color)}
-              className="guess-peg"
+              className="color-option"
               style={{
-                marginRight: 8,
                 background: isUsed ? "#ccc" : color,
                 cursor: isUsed || disabled ? "not-allowed" : "pointer",
                 opacity: isUsed || disabled ? 0.5 : 1,
               }}
             >
               {color?.charAt(0)}
-            </button>
+            </div>
           );
         })}
       </div>

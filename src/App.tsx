@@ -108,43 +108,46 @@ function App() {
           </p>
         </div>
       </div>
-      <h1>Mastermind</h1>
-      <div className="code-display">
-        <div className="code-row">
-          {Array(4)
-            .fill(null)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="code-peg"
-                style={{
-                  background: isGameOver ? mockCode[i] : "#333",
-                  color: isGameOver ? "white" : "white",
-                }}
-              >
-                {isGameOver ? mockCode[i]?.charAt(0) : "?"}
-              </div>
-            ))}
+      <div className="game-container">
+        <h1>Mastermind</h1>
+        <div className="code-display">
+          <div className="code-row">
+            {Array(4)
+              .fill(null)
+              .map((_, i) => (
+                <div
+                  key={i}
+                  className="code-peg"
+                  style={{
+                    background: isGameOver ? mockCode[i] : "#333",
+                    color: isGameOver ? "white" : "white",
+                  }}
+                >
+                  {isGameOver ? mockCode[i]?.charAt(0) : "?"}
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
-      <GameBoard guesses={guesses} feedbacks={feedbacks} />
-      <div className="input-section">
-        <GuessInput
-          guess={currentGuess}
-          setGuess={setCurrentGuess}
-          hardMode={hardMode}
-          disabled={isGameOver}
-        />
+        <div className="game-board">
+          <GameBoard guesses={guesses} feedbacks={feedbacks} />
+        </div>
+        <div className="input-section">
+          <GuessInput
+            guess={currentGuess}
+            setGuess={setCurrentGuess}
+            hardMode={hardMode}
+            disabled={isGameOver}
+          />
 
-        <div className="reset-button-container">
-          {isGameOver && (
-            <button onClick={resetGame} className="reset-button">
-              {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
-            </button>
-          )}
+          <div className="reset-button-container">
+            {isGameOver && (
+              <button onClick={resetGame} className="reset-button">
+                {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      <ColorPicker />
     </div>
   );
 }

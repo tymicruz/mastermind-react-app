@@ -6,16 +6,25 @@ export interface FeedbackItem {
 }
 
 interface FeedbackProps {
-  feedback: FeedbackItem[];
+  feedback: FeedbackItem;
 }
 
 const Feedback: React.FC<FeedbackProps> = ({ feedback }) => {
+  const totalPegs = 4;
+  const correctPegs = feedback.correct;
+  const misplacedPegs = feedback.misplaced;
+  const emptyPegs = totalPegs - correctPegs - misplacedPegs;
+
+  const allPegs = [
+    ...Array(correctPegs).fill("correct"),
+    ...Array(misplacedPegs).fill("misplaced"),
+    ...Array(emptyPegs).fill("empty"),
+  ];
+
   return (
-    <div>
-      {feedback.map((item, i) => (
-        <div key={i}>
-          {item.correct} correct, {item.misplaced} misplaced
-        </div>
+    <div className="feedback-pegs">
+      {allPegs.map((type, i) => (
+        <div key={i} className={`feedback-peg ${type}`} />
       ))}
     </div>
   );
