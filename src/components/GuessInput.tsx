@@ -5,6 +5,7 @@ interface GuessInputProps {
   guess: (Color | null)[];
   setGuess: (guess: (Color | null)[]) => void;
   hardMode: boolean;
+  disabled?: boolean;
 }
 
 const colorOptions = Object.values(Color);
@@ -13,6 +14,7 @@ const GuessInput: React.FC<GuessInputProps> = ({
   guess,
   setGuess,
   hardMode,
+  disabled,
 }) => {
   const [selectedPegIndex, setSelectedPegIndex] = useState<number | null>(null);
 
@@ -68,13 +70,13 @@ const GuessInput: React.FC<GuessInputProps> = ({
           return (
             <button
               key={color}
-              onClick={() => !isUsed && handleColorClick(color)}
+              onClick={() => !isUsed && !disabled && handleColorClick(color)}
               className="guess-peg"
               style={{
                 marginRight: 8,
                 background: isUsed ? "#ccc" : color,
-                cursor: isUsed ? "not-allowed" : "pointer",
-                opacity: isUsed ? 0.5 : 1,
+                cursor: isUsed || disabled ? "not-allowed" : "pointer",
+                opacity: isUsed || disabled ? 0.5 : 1,
               }}
             >
               {color}

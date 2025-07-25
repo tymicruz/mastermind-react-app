@@ -108,7 +108,7 @@ function App() {
         guess={currentGuess}
         setGuess={setCurrentGuess}
         hardMode={hardMode}
-        // disabled={isGameOver}
+        disabled={isGameOver}
       />
       <ColorPicker />
     </div>
