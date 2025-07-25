@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import GameBoard from "./components/GameBoard";
 import GuessInput from "./components/GuessInput";
 import ColorPicker from "./components/ColorPicker";
-import { Color, EMPTY_GUESS } from "./logic/mastermind";
+import {
+  Color,
+  EMPTY_FEEDBACKS,
+  EMPTY_GUESS,
+  EMPTY_GUESSES,
+} from "./logic/mastermind";
 import type { FeedbackItem } from "./components/Feedback";
 import "./App.css";
 
@@ -43,16 +48,20 @@ const calculateFeedback = (guess: Color[], code: Color[]) => {
 };
 
 function App() {
+  const resetGame = () => {
+    setGuesses(EMPTY_GUESSES);
+    setFeedbacks(EMPTY_FEEDBACKS);
+    setCurrentGuess(EMPTY_GUESS);
+  };
   const [hardMode, setHardMode] = useState(false);
   const [currentGuess, setCurrentGuess] =
     useState<(Color | null)[]>(EMPTY_GUESS);
 
-  const [guesses, setGuesses] = useState<(Color[] | null)[]>(
-    Array(10).fill(null)
-  );
-  const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>(
-    Array(10).fill({ correct: 0, misplaced: 0 })
-  );
+  const [guesses, setGuesses] = useState<(Color[] | null)[]>(EMPTY_GUESSES);
+  const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>(EMPTY_FEEDBACKS);
+  const isGameWon = feedbacks.some((feedback) => feedback.correct === 4);
+  const isGameOver = isGameWon || guesses.filter((g) => g === null).length == 0;
+  const isGameStarted = guesses.filter((g) => g !== null).length > 0;
 
   useEffect(() => {
     // Check if all pegs are filled
@@ -84,14 +93,22 @@ function App() {
   return (
     <div className="App">
       <h1>Mastermind</h1>
-      <button onClick={() => setHardMode((h) => !h)}>
-        {hardMode ? "Switch to Normal Mode" : "Switch to Hard Mode"}
-      </button>
+      {isGameOver && (
+        <button onClick={resetGame}>
+          {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
+        </button>
+      )}
+      {!isGameStarted && (
+        <button onClick={() => setHardMode((h) => !h)}>
+          {hardMode ? "Switch to Normal Mode" : "Switch to Hard Mode"}
+        </button>
+      )}
       <GameBoard guesses={guesses} feedbacks={feedbacks} />
       <GuessInput
         guess={currentGuess}
         setGuess={setCurrentGuess}
         hardMode={hardMode}
+        // disabled={isGameOver}
       />
       <ColorPicker />
     </div>

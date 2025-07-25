@@ -9,3 +9,7 @@ export enum Color {
 } 
 
 export const EMPTY_GUESS: (Color | null)[] = [null, null, null, null];
+
+export const EMPTY_GUESSES = Array(10).fill(null);
+
+export const EMPTY_FEEDBACKS = Array(10).fill({ correct: 0, misplaced: 0 });
