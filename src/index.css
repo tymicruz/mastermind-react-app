@@ -66,3 +66,31 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.code-display {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.code-display h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.code-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.code-peg {
+  width: 40px;
+  height: 40px;
+  border: 2px solid gray;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}

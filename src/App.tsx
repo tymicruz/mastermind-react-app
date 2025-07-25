@@ -109,7 +109,24 @@ function App() {
         </div>
       </div>
       <h1>Mastermind</h1>
-
+      <div className="code-display">
+        <div className="code-row">
+          {Array(4)
+            .fill(null)
+            .map((_, i) => (
+              <div
+                key={i}
+                className="code-peg"
+                style={{
+                  background: isGameOver ? mockCode[i] : "#333",
+                  color: isGameOver ? "transparent" : "white",
+                }}
+              >
+                {isGameOver ? "" : "?"}
+              </div>
+            ))}
+        </div>
+      </div>
       <GameBoard guesses={guesses} feedbacks={feedbacks} />
       <div className="input-section">
         <GuessInput
