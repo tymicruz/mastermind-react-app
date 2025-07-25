@@ -40,3 +40,20 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Mastermind Game Styles */
+.guess-row {
+  display: flex;
+  gap: 8px;
+}
+
+.guess-peg {
+  width: 40px;
+  height: 40px;
+  border: 2px solid gray;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+}

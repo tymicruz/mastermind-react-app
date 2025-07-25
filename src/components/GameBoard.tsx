@@ -8,22 +8,12 @@ interface GameBoardProps {
 const GameBoard: React.FC<GameBoardProps> = ({ guesses }) => (
   <div className="guess-board">
     {guesses.map((guess, i) => (
-      <div
-        key={i}
-        className="guess-row"
-        style={{ display: "flex", gap: "8px" }}
-      >
+      <div key={i} className="guess-row">
         {guess.map((color, j) => (
           <div
             key={j}
+            className="guess-peg"
             style={{
-              width: 40,
-              height: 40,
-              border: "2px solid gray",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
               background: color || "#eee",
             }}
           >

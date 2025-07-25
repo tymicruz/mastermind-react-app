@@ -52,34 +52,38 @@ const GuessInput: React.FC<GuessInputProps> = ({
         {guess.map((color, i) => (
           <div
             key={i}
+            className="guess-peg"
             onClick={() => handlePegClick(i)}
             onDoubleClick={() => handlePegDoubleClick(i)}
             style={{
-              width: 40,
-              height: 40,
+              background: color || "#eee",
               border:
                 selectedPegIndex === i ? "2px solid blue" : "2px solid gray",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              background: color || "#eee",
             }}
           >
             {color || ""}
           </div>
         ))}
       </div>
-      <div style={{ marginTop: 12 }}>
-        {availableColors.map((option) => (
-          <button
-            key={option}
-            onClick={() => handleColorClick(option)}
-            style={{ marginRight: 8 }}
-          >
-            {option}
-          </button>
-        ))}
+      <div className="guess-row" style={{ marginTop: 12 }}>
+        {colorOptions.map((color) => {
+          const isUsed = !hardMode && guess.includes(color);
+          return (
+            <button
+              key={color}
+              onClick={() => !isUsed && handleColorClick(color)}
+              className="guess-peg"
+              style={{
+                marginRight: 8,
+                background: isUsed ? "#ccc" : color,
+                cursor: isUsed ? "not-allowed" : "pointer",
+                opacity: isUsed ? 0.5 : 1,
+              }}
+            >
+              {color}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
