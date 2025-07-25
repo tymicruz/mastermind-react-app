@@ -15,9 +15,6 @@ const GuessInput: React.FC<GuessInputProps> = ({
   hardMode,
 }) => {
   const [selectedPegIndex, setSelectedPegIndex] = useState<number | null>(null);
-  const availableColors = hardMode
-    ? colorOptions // all colors available, even if already used
-    : colorOptions.filter((option) => !guess.includes(option));
 
   // Handle peg selection/deselection
   const handlePegClick = (i: number) => {

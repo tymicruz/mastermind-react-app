@@ -45,6 +45,7 @@
 .guess-row {
   display: flex;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .guess-peg {

@@ -9,15 +9,41 @@ import "./App.css";
 
 const emptyGuess: (Color | null)[] = [null, null, null, null];
 
-const mockGuesses: Color[][] = [
-  [Color.Red, Color.Blue, Color.Green, Color.Yellow],
-  [Color.Purple, Color.Red, Color.Yellow, Color.Green],
-];
+// TODO: remove mock code and maybe get this from the server like get this from the server.
+const mockCode: Color[] = [Color.Red, Color.Blue, Color.Green, Color.Yellow];
 
-const mockFeedback = [
-  { correct: 2, misplaced: 1 },
-  { correct: 1, misplaced: 2 },
-];
+const calculateFeedback = (guess: Color[], code: Color[]) => {
+  let correct = 0;
+  let misplaced = 0;
+
+  // Markers for matched positions
+  const codeUsed = Array(code.length).fill(false);
+  const guessUsed = Array(guess.length).fill(false);
+
+  // First pass: correct positions
+  for (let i = 0; i < code.length; i++) {
+    if (guess[i] === code[i]) {
+      correct++;
+      codeUsed[i] = true;
+      guessUsed[i] = true;
+    }
+  }
+
+  // Second pass: misplaced
+  for (let i = 0; i < guess.length; i++) {
+    if (!guessUsed[i]) {
+      for (let j = 0; j < code.length; j++) {
+        if (!codeUsed[j] && guess[i] === code[j]) {
+          misplaced++;
+          codeUsed[j] = true;
+          break;
+        }
+      }
+    }
+  }
+
+  return { correct, misplaced };
+};
 
 function App() {
   const [hardMode, setHardMode] = useState(false);
@@ -31,8 +57,17 @@ function App() {
     // Check if all pegs are filled
     if (currentGuess.every((c) => c !== null)) {
       // Submit the guess
+      const feedback = calculateFeedback(currentGuess as Color[], mockCode);
+      console.log(
+        "Guess:",
+        currentGuess,
+        "Code:",
+        mockCode,
+        "Feedback:",
+        feedback
+      );
       setGuesses((prev) => [...prev, currentGuess as Color[]]);
-      setFeedbacks((prev) => [...prev, { correct: 0, misplaced: 0 }]); // Replace with real feedback logic later
+      setFeedbacks((prev) => [...prev, feedback]);
       setCurrentGuess(emptyGuess);
     }
   }, [currentGuess]);
@@ -43,8 +78,7 @@ function App() {
       <button onClick={() => setHardMode((h) => !h)}>
         {hardMode ? "Switch to Normal Mode" : "Switch to Hard Mode"}
       </button>
-      <GameBoard guesses={guesses} />
-      <Feedback feedback={feedbacks} />
+      <GameBoard guesses={guesses} feedbacks={feedbacks} />
       <GuessInput
         guess={currentGuess}
         setGuess={setCurrentGuess}

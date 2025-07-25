@@ -1,0 +1,25 @@
+import React from "react";
+import { Color } from "../logic/mastermind";
+import Feedback from "./Feedback";
+import type { FeedbackItem } from "./Feedback";
+
+interface GuessProps {
+  guess: Color[];
+  feedback: FeedbackItem;
+}
+
+const Guess: React.FC<GuessProps> = ({ guess, feedback }) => (
+  <div className="guess-row">
+    {/* Guess pegs */}
+    {guess.map((color, j) => (
+      <div key={j} className="guess-peg" style={{ background: color }}>
+        {color}
+      </div>
+    ))}
+
+    {/* Single feedback */}
+    <Feedback feedback={[feedback]} />
+  </div>
+);
+
+export default Guess;

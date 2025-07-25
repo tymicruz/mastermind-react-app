@@ -1,26 +1,18 @@
 import React from "react";
 import { Color } from "../logic/mastermind";
+import type { FeedbackItem } from "./Feedback";
+import Feedback from "./Feedback";
+import Guess from "./Guess";
 
 interface GameBoardProps {
   guesses: Color[][];
+  feedbacks: FeedbackItem[];
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ guesses }) => (
+const GameBoard: React.FC<GameBoardProps> = ({ guesses, feedbacks }) => (
   <div className="guess-board">
     {guesses.map((guess, i) => (
-      <div key={i} className="guess-row">
-        {guess.map((color, j) => (
-          <div
-            key={j}
-            className="guess-peg"
-            style={{
-              background: color || "#eee",
-            }}
-          >
-            {color || ""}
-          </div>
-        ))}
-      </div>
+      <Guess key={i} guess={guess} feedback={feedbacks[i]} />
     ))}
   </div>
 );
