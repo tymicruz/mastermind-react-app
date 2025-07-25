@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import GameBoard from "./components/GameBoard";
 import GuessInput from "./components/GuessInput";
-import ColorPicker from "./components/ColorPicker";
 import {
   Color,
   EMPTY_FEEDBACKS,
@@ -61,6 +60,7 @@ function App() {
   const isGameStarted =
     guesses.some((guess) => guess && guess.some((color) => color !== null)) ||
     currentGuess.some((peg) => peg !== null); // Game started when any guess has actual colors or current guess has pegs
+  (window as any).secretCode = code;
 
   const resetGame = () => {
     setGuesses(EMPTY_GUESSES);
@@ -140,6 +140,10 @@ function App() {
         <div className="game-controls">
           {!isGameStarted ? (
             <button onClick={handleModeToggle}>Switch Mode</button>
+          ) : isGameOver ? (
+            <button onClick={() => resetGame()}>
+              {isGameWon ? "You Won!\nPlay Again" : "Game Over!\nTry Again"}
+            </button>
           ) : (
             <button onClick={() => resetGame()}>Reset Game</button>
           )}
@@ -195,14 +199,6 @@ function App() {
             selectedPegIndex={selectedPegIndex}
             setSelectedPegIndex={setSelectedPegIndex}
           />
-
-          <div className="reset-button-container">
-            {isGameOver && (
-              <button onClick={() => resetGame()} className="reset-button">
-                {isGameWon ? "You Won! Play Again" : "Game Over! Try Again"}
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>

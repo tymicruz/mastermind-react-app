@@ -68,7 +68,7 @@ button:focus-visible {
 }
 
 .code-display {
-  margin: 0; /* Remove unnecessary margin */
+  margin: 0 0 10px 0; /* Add bottom margin back */
   text-align: center;
 }
 

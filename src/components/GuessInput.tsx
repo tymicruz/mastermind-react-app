@@ -84,28 +84,26 @@ const GuessInput: React.FC<GuessInputProps> = ({
         ))}
       </div>
 
-      {/* Show color options when game is not disabled */}
-      {!disabled && (
-        <div className="guess-row" style={{ marginTop: 12 }}>
-          {colorOptions.map((color) => {
-            const isUsed = !hardMode && guess.includes(color);
-            return (
-              <div
-                key={color}
-                onClick={() => !isUsed && !disabled && handleColorClick(color)}
-                className="color-option"
-                style={{
-                  background: isUsed ? "#ccc" : color,
-                  cursor: isUsed || disabled ? "not-allowed" : "pointer",
-                  opacity: isUsed || disabled ? 0.5 : 1,
-                }}
-              >
-                {color?.charAt(0)}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {/* Show color options always, but disable when game is over */}
+      <div className="guess-row" style={{ marginTop: 12 }}>
+        {colorOptions.map((color) => {
+          const isUsed = !hardMode && guess.includes(color);
+          return (
+            <div
+              key={color}
+              onClick={() => !isUsed && !disabled && handleColorClick(color)}
+              className="color-option"
+              style={{
+                background: isUsed ? "#ccc" : color,
+                cursor: isUsed || disabled ? "not-allowed" : "pointer",
+                opacity: isUsed || disabled ? 0.5 : 1,
+              }}
+            >
+              {color?.charAt(0)}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
