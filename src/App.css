@@ -49,8 +49,8 @@
 }
 
 .guess-peg {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 2px solid gray;
   border-radius: 50%;
   display: flex;
@@ -92,15 +92,15 @@
 }
 
 
-.game-controls button {
-  width: 180px;
-  height: 40px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
+.game-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+  align-items: center;  /* Centers the items relative to each other */
 }
 
 .mode-indicator {
