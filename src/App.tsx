@@ -119,10 +119,10 @@ function App() {
                 className="code-peg"
                 style={{
                   background: isGameOver ? mockCode[i] : "#333",
-                  color: isGameOver ? "transparent" : "white",
+                  color: isGameOver ? "white" : "white",
                 }}
               >
-                {isGameOver ? "" : "?"}
+                {isGameOver ? mockCode[i]?.charAt(0) : "?"}
               </div>
             ))}
         </div>

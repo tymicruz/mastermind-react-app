@@ -60,7 +60,7 @@ const GuessInput: React.FC<GuessInputProps> = ({
                 selectedPegIndex === i ? "2px solid blue" : "2px solid gray",
             }}
           >
-            {color || ""}
+            {color?.charAt(0)}
           </div>
         ))}
       </div>
@@ -79,7 +79,7 @@ const GuessInput: React.FC<GuessInputProps> = ({
                 opacity: isUsed || disabled ? 0.5 : 1,
               }}
             >
-              {color}
+              {color?.charAt(0)}
             </button>
           );
         })}

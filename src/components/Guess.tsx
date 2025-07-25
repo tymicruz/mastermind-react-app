@@ -17,7 +17,7 @@ const Guess: React.FC<GuessProps> = ({ guess, feedback }) => (
         className="guess-peg"
         style={{ background: color || "#ccc", opacity: color ? 1 : 0.5 }}
       >
-        {color}
+        {color ? color?.charAt(0) : ""}
       </div>
     ))}
 
