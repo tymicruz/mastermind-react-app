@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import GameBoard from "./components/GameBoard";
 import GuessInput from "./components/GuessInput";
-import Feedback from "./components/Feedback";
 import ColorPicker from "./components/ColorPicker";
-import { Color } from "./logic/mastermind";
+import { Color, EMPTY_GUESS } from "./logic/mastermind";
 import type { FeedbackItem } from "./components/Feedback";
 import "./App.css";
-
-const emptyGuess: (Color | null)[] = [null, null, null, null];
 
 // TODO: remove mock code and maybe get this from the server like get this from the server.
 const mockCode: Color[] = [Color.Red, Color.Blue, Color.Green, Color.Yellow];
@@ -48,19 +45,39 @@ const calculateFeedback = (guess: Color[], code: Color[]) => {
 function App() {
   const [hardMode, setHardMode] = useState(false);
   const [currentGuess, setCurrentGuess] =
-    useState<(Color | null)[]>(emptyGuess);
+    useState<(Color | null)[]>(EMPTY_GUESS);
 
-  const [guesses, setGuesses] = useState<Color[][]>([]);
-  const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
+  const [guesses, setGuesses] = useState<(Color[] | null)[]>(
+    Array(10).fill(null)
+  );
+  const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>(
+    Array(10).fill({ correct: 0, misplaced: 0 })
+  );
 
   useEffect(() => {
     // Check if all pegs are filled
     if (currentGuess.every((c) => c !== null)) {
       // Submit the guess
       const feedback = calculateFeedback(currentGuess as Color[], mockCode);
-      setGuesses((prev) => [...prev, currentGuess as Color[]]);
-      setFeedbacks((prev) => [...prev, feedback]);
-      setCurrentGuess(emptyGuess);
+
+      const nextIndex = guesses.findIndex((guess) => guess === null);
+
+      if (nextIndex !== -1) {
+        // Update the specific row
+        setGuesses((prev) => {
+          const newGuesses = [...prev];
+          newGuesses[nextIndex] = currentGuess as Color[];
+          return newGuesses;
+        });
+
+        setFeedbacks((prev) => {
+          const newFeedbacks = [...prev];
+          newFeedbacks[nextIndex] = feedback;
+          return newFeedbacks;
+        });
+      }
+
+      setCurrentGuess(EMPTY_GUESS);
     }
   }, [currentGuess]);
 

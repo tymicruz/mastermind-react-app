@@ -7,3 +7,5 @@ export enum Color {
   Purple = "purple",
   Orange = "orange",
 } 
+
+export const EMPTY_GUESS: (Color | null)[] = [null, null, null, null];
