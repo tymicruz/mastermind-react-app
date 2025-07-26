@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import GameBoard from "./components/GameBoard";
 import GuessInput from "./components/GuessInput";
+import HowToPlay from "./components/HowToPlay";
+import HamburgerMenu from "./components/HamburgerMenu";
 import {
   Color,
   EMPTY_FEEDBACKS,
@@ -54,9 +56,11 @@ function App() {
   const [code, setCode] = useState<Color[]>(() => generateRandomCode(hardMode));
   const [nextIndex, setNextIndex] = useState<number>(0);
   const [selectedPegIndex, setSelectedPegIndex] = useState<number | null>(null);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const isGameWon = feedbacks.some((feedback) => feedback.correct === 4);
   const isGameOver = isGameWon || nextIndex === -1;
+
   const isGameStarted =
     guesses.some((guess) => guess && guess.some((color) => color !== null)) ||
     currentGuess.some((peg) => peg !== null); // Game started when any guess has actual colors or current guess has pegs
@@ -134,83 +138,105 @@ function App() {
   }, [currentGuess, code, nextIndex]);
 
   return (
-    <div className="App">
-      <div className="game-container">
-        <h1>Mastermind</h1>
-        <div className="game-controls">
+    <>
+      <div className="App">
+        <div className="game-container">
+          <h1>Mastermind</h1>
           <div
-            className={`mode-indicator ${
-              hardMode ? "hard" : "normal"
-            } mode-info ${!isGameStarted ? "active" : ""}`}
-            onClick={handleModeToggle}
-            style={{ cursor: "pointer" }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "10px",
+              marginBottom: "10px",
+            }}
           >
-            <p>
-              <strong>Mode: {hardMode ? "Hard" : "Easy"}</strong>
-              <br />
-              {hardMode
-                ? "Code can use repeated colors"
-                : "Code uses unique colors only"}
-            </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                maxWidth: "400px",
+                width: "100%",
+              }}
+            >
+              <div
+                className={`mode-indicator ${
+                  hardMode ? "hard" : "normal"
+                } mode-info ${!isGameStarted ? "active" : ""}`}
+                onClick={handleModeToggle}
+                style={{ cursor: "pointer", flex: "2" }}
+              >
+                <p>
+                  <strong>Mode: {hardMode ? "Hard" : "Easy"}</strong>
+                  <br />
+                  {hardMode
+                    ? "Code can use repeated colors"
+                    : "Code uses unique colors only"}
+                </p>
+              </div>
+              <HamburgerMenu
+                onReset={resetGame}
+                onHowToPlay={() => setShowHowToPlay(true)}
+                isGameStarted={isGameStarted}
+                isGameOver={isGameOver}
+                isGameWon={isGameWon}
+              />
+            </div>
           </div>
-          {!isGameStarted ? (
-            <button onClick={() => resetGame()}>↻ Reset Game</button>
-          ) : isGameOver ? (
-            <button onClick={() => resetGame()}>
-              {isGameWon ? "↻ You Won!\nPlay Again" : "↻ Game Over!\nTry Again"}
-            </button>
-          ) : (
-            <button onClick={() => resetGame()}>↻ Reset Game</button>
-          )}
-        </div>
-        <div className="code-display">
-          <div className="code-row">
-            {Array(4)
-              .fill(null)
-              .map((_, i) => (
-                <div
-                  key={i}
-                  className="code-peg"
-                  style={{
-                    background: isGameOver ? code[i] : "#333",
-                    color: isGameOver ? "white" : "white",
-                    border: "2px solid #e2e8f0" /* Add border */,
-                    transition: "all 0.2s ease" /* Add transition */,
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" /* Add shadow */,
-                  }}
-                >
-                  {isGameOver ? code[i]?.charAt(0).toUpperCase() : "?"}
-                </div>
-              ))}
+          <div className="code-display">
+            <div className="code-row">
+              {Array(4)
+                .fill(null)
+                .map((_, i) => (
+                  <div
+                    key={i}
+                    className="code-peg"
+                    style={{
+                      background: isGameOver ? code[i] : "#333",
+                      color: isGameOver ? "white" : "white",
+                      border: "2px solid #e2e8f0",
+                      transition: "all 0.2s ease",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {isGameOver ? code[i]?.charAt(0).toUpperCase() : "?"}
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
-        <div className="game-board">
-          <GameBoard
-            guesses={guesses}
-            feedbacks={feedbacks}
-            currentGuess={currentGuess}
-            nextIndex={nextIndex}
-            onPegClick={handlePegClick}
-            onPegDoubleClick={handlePegDoubleClick}
-            selectedPegIndex={selectedPegIndex}
-            isGameOver={isGameOver}
-          />
-        </div>
-        <div className="input-section">
-          <GuessInput
-            guess={currentGuess}
-            setGuess={setCurrentGuess}
-            hardMode={hardMode}
-            disabled={isGameOver}
-            selectedPegIndex={selectedPegIndex}
-            setSelectedPegIndex={setSelectedPegIndex}
-            isGameOver={isGameOver}
-            isGameWon={isGameWon}
-            onReset={resetGame}
-          />
+          <div className="game-board">
+            <GameBoard
+              guesses={guesses}
+              feedbacks={feedbacks}
+              currentGuess={currentGuess}
+              nextIndex={nextIndex}
+              onPegClick={handlePegClick}
+              onPegDoubleClick={handlePegDoubleClick}
+              selectedPegIndex={selectedPegIndex}
+              isGameOver={isGameOver}
+            />
+          </div>
+          <div className="input-section">
+            <GuessInput
+              guess={currentGuess}
+              setGuess={setCurrentGuess}
+              hardMode={hardMode}
+              disabled={isGameOver}
+              selectedPegIndex={selectedPegIndex}
+              setSelectedPegIndex={setSelectedPegIndex}
+              isGameOver={isGameOver}
+              isGameWon={isGameWon}
+              onReset={resetGame}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <HowToPlay
+        isOpen={showHowToPlay}
+        onClose={() => setShowHowToPlay(false)}
+      />
+    </>
   );
 }
 
