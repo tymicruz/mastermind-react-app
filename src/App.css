@@ -230,7 +230,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: #f7fafc; /* Light background */
+  background: #f8fafc; /* Lighter background */
   font-size: min(9px, 0.9vh);
   font-weight: bold; /* Make letters bold */
   color: #ffffff; /* White color */
@@ -305,6 +305,11 @@
 .feedback-peg.misplaced {
   background-color: #fff;
   border: 1px solid #333;
+}
+
+.feedback-peg.empty {
+  background-color: #e2e8f0; /* Light gray for empty feedback pegs */
+  border: 1px solid #cbd5e0;
 }
 
 /* Feedback positioning - move it outside the flex flow */

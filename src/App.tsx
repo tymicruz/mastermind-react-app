@@ -89,7 +89,21 @@ function App() {
   // Handle peg selection in the active row
   const handlePegClick = (rowIndex: number, pegIndex: number) => {
     if (rowIndex === nextIndex) {
-      setSelectedPegIndex(selectedPegIndex === pegIndex ? null : pegIndex);
+      // If the peg has a color, clear it on first click
+      if (currentGuess[pegIndex] !== null) {
+        setCurrentGuess(
+          currentGuess.map((c, i) => (i === pegIndex ? null : c))
+        );
+        setSelectedPegIndex(null);
+      } else {
+        // If clicking the same peg, deselect it
+        if (selectedPegIndex === pegIndex) {
+          setSelectedPegIndex(null);
+        } else {
+          // Select the clicked peg
+          setSelectedPegIndex(pegIndex);
+        }
+      }
     }
   };
 
