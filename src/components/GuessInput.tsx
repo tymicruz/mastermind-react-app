@@ -30,12 +30,29 @@ const GuessInput: React.FC<GuessInputProps> = ({
   const handlePegClick = (i: number) => {
     if (disabled) return;
 
-    // If clicking the same peg, deselect it
-    if (selectedPegIndex === i) {
+    console.log(
+      "Click on peg:",
+      i,
+      "Selected peg:",
+      selectedPegIndex,
+      "Peg color:",
+      guess[i]
+    );
+
+    // If the peg has a color, clear it on first click
+    if (guess[i] !== null) {
+      console.log("Clearing peg at index:", i);
+      setGuess(guess.map((c, index) => (index === i ? null : c)));
       setSelectedPegIndex(null);
     } else {
-      // Select the clicked peg
-      setSelectedPegIndex(i);
+      // If clicking the same peg, deselect it
+      if (selectedPegIndex === i) {
+        setSelectedPegIndex(null);
+      } else {
+        console.log("Selecting new peg:", i);
+        // Select the clicked peg
+        setSelectedPegIndex(i);
+      }
     }
   };
 
