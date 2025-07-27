@@ -205,7 +205,7 @@
   font-weight: 800; /* Extra bold for impact */
   text-align: center;
   letter-spacing: -1px; /* Tighter letter spacing for sleek look */
-  font-family: 'Inter', sans-serif; /* Sleek, intelligent font */
+  font-family: 'Georgia', 'Times New Roman', serif; /* Serif font for contrast */
 }
 
 .game-container h2 {

@@ -3,6 +3,7 @@ import GameBoard from "./components/GameBoard";
 import GuessInput from "./components/GuessInput";
 import HowToPlay from "./components/HowToPlay";
 import HamburgerMenu from "./components/HamburgerMenu";
+import confetti from "canvas-confetti";
 import {
   Color,
   EMPTY_FEEDBACKS,
@@ -136,6 +137,40 @@ function App() {
       setNextIndex(newNextIndex);
     }
   }, [currentGuess, code, nextIndex]);
+
+  useEffect(() => {
+    let interval: number | null = null;
+
+    if (isGameWon) {
+      // Start continuous confetti
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+      }
+
+      interval = setInterval(function () {
+        // Create confetti with game colors
+        confetti({
+          ...defaults,
+          particleCount: 30,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        });
+        confetti({
+          ...defaults,
+          particleCount: 30,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        });
+      }, 500); // Slower interval for continuous effect
+    }
+
+    // Cleanup function to clear interval when game is reset
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isGameWon]);
 
   return (
     <>
